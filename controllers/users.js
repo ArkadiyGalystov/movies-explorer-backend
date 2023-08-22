@@ -40,9 +40,7 @@ function createUser(req, res, next) {
         );
       } else if (err.name === 'ValidationError') {
         next(
-          new BadRequestError(
-            'Переданы некорректные данные при регистрации пользователя',
-          ),
+          new BadRequestError('Введены некорректные данные',),
         );
       } else {
         next(err);
@@ -83,7 +81,7 @@ function getCurrentUserId(req, res, next) {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new BadRequestError('Передан некорректный id'));
+        next(new BadRequestError('Введены некорректные данные'));
       } else {
         next(err);
       }
@@ -91,38 +89,29 @@ function getCurrentUserId(req, res, next) {
 }
 
 // обновление данных пользователя
-function updateUser(req, res, next) {
-  const { name, email } = req.body;
-  const { userId } = req.user;
-
+function updateUser (req, res, next) {
+  const id = req.user._id;
+  const { email, name } = req.body;
   User.findByIdAndUpdate(
-    userId,
-    {
-      email,
-      name,
-    },
-    {
-      new: true,
-      runValidators: true,
-    },
+    id,
+    { email, name },
+    { new: true, runValidators: true },
   )
     .then((user) => {
-      if (user) return res.send(user);
-
-      throw new NotFoundError('Пользователь с таким id не найден');
+      res.send(user);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.name === 'CastError') {
+        next(new BadRequestError('Введены некорректные данные'));
+      } else if (err.code === 11000) {
         next(
-          new BadRequestError(
-            'Переданы некорректные данные при обновлении профиля',
-          ),
+          new NotFoundError('Пользователь с таким email уже зарегистрирован'),
         );
       } else {
         next(err);
       }
     });
-}
+};
 
 module.exports = {
   createUser,
