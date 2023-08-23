@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const { REGEX_URL, REGEX_URL_EMAIL } = require('../utils/constants');
+const { REGEX_URL, REG_EN } = require('../utils/constants');
 
 const {
   getUserMovies,
@@ -23,7 +23,7 @@ router.post(
       owner: Joi.number().required(),
       movieId: Joi.number().required(),
       nameRU: Joi.string().required(),
-      nameEN: Joi.string().required().pattern(REGEX_URL_EMAIL),
+      nameEN: Joi.string().required().pattern(REG_EN),
     }),
   }),
   createMovie,
