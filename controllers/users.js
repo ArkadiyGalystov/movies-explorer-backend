@@ -105,7 +105,7 @@ function updateUser (req, res, next) {
         next(new BadRequestError('Введены некорректные данные'));
       } else if (err.code === 11000) {
         next(
-          new NotFoundError('Пользователь с таким email уже зарегистрирован'),
+          new ConflictError('Пользователь с таким email уже зарегистрирован'),
         );
       } else {
         next(err);
