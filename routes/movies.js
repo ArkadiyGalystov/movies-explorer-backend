@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const { celebrate, Joi } = require('celebrate');
-const { REGEX_URL } = require('../utils/constants');
+const { REGEX_URL, REGEX_URL_EMAIL } = require('../utils/constants');
 
 const {
   getUserMovies,
@@ -17,13 +17,13 @@ router.post(
       duration: Joi.number().required(),
       year: Joi.string().required(),
       description: Joi.string().required(),
-      image: Joi.string().required().pattern(regUrl),
-      trailerLink: Joi.string().required().pattern(regUrl),
-      thumbnail: Joi.string().required().pattern(regUrl),
+      image: Joi.string().required().pattern(REGEX_URL),
+      trailerLink: Joi.string().required().pattern(REGEX_URL),
+      thumbnail: Joi.string().required().pattern(REGEX_URL),
       owner: Joi.number().required(),
       movieId: Joi.number().required(),
       nameRU: Joi.string().required(),
-      nameEN: Joi.string().required().pattern(regEn),
+      nameEN: Joi.string().required().pattern(REGEX_URL_EMAIL),
     }),
   }),
   createMovie,
